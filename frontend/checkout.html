@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — LUXEMART</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{--black:#07070a;--charcoal:#111114;--off-white:#f5f2eb;--gold:#c9a84c;--gold-bright:#e4c76b;--text-dim:#a09b90;--line:rgba(201,168,76,0.2);--surface:rgba(17,17,20,0.85);--border:rgba(255,255,255,0.07);--radius:14px;--ff:system-ui,-apple-system,Segoe UI,Roboto,Arial;--shadow:0 24px 70px -18px rgba(0,0,0,0.7);--trans:.35s cubic-bezier(.2,.8,.2,1)}
+    body{margin:0;font-family:var(--ff);background:var(--black);color:var(--off-white);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:28px;}
+    .wrap{width:min(980px,100%);}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .logo{display:flex;gap:10px;align-items:center}
+    .seal{width:10px;height:10px;background:var(--gold);border-radius:50%;box-shadow:0 0 18px rgba(201,168,76,.8)}
+    .logo b{font-size:20px;letter-spacing:.03em;font-weight:600}
+    .logo em{color:var(--gold);font-style:italic;font-weight:400}
+    .pill{padding:8px 12px;border:1px solid var(--border);border-radius:999px;color:var(--text-dim);font-size:12px}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr;}}
+
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+    .card .head{padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .card .head h2{margin:0;font-size:16px}
+    .card .body{padding:18px}
+
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px}
+    th{color:var(--text-dim);font-weight:700;text-align:left}
+    td:last-child,th:last-child{text-align:right}
+    .muted{color:var(--text-dim);font-size:13px;line-height:1.6}
+
+    .form{display:grid;gap:12px}
+    .field label{display:block;font-size:13px;color:var(--text-dim);margin-bottom:8px}
+    .field input,.field select{width:100%;padding:13px 14px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--off-white);outline:none;transition:border-color var(--trans),background var(--trans)}
+    .field input:focus,.field select:focus{border-color:rgba(201,168,76,0.6);background:rgba(255,255,255,0.06)}
+
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .btn{padding:12px 16px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:transform var(--trans),background var(--trans),border-color var(--trans);font-weight:800;letter-spacing:.02em}
+    .btn-primary{background:var(--gold);color:#0a0805;border-color:var(--gold)}
+    .btn-primary:hover{background:var(--gold-bright);transform:translateY(-2px)}
+    .btn-ghost{background:transparent;color:var(--off-white);border-color:var(--border)}
+    .btn-ghost:hover{border-color:rgba(201,168,76,0.6);transform:translateY(-2px)}
+
+    .sectionFlow{padding:26px 18px;display:none}
+    .sectionFlow.show{display:block}
+    .bigStatus{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+    .bigStatus i{font-size:34px;color:var(--gold)}
+    .bigStatus b{font-size:18px}
+    .bar{height:8px;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;border:1px solid rgba(201,168,76,0.15);}
+    .bar > div{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .4s ease}
+    .center{display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+    .kpi{font-size:34px;color:var(--gold);font-family:var(--ff);font-weight:900;margin:14px 0 6px}
+    .orderId{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;letter-spacing:.02em}
+
+    .step{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .dot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(201,168,76,0.25);background:rgba(255,255,255,0.04)}
+    .dot.done{background:var(--gold);border-color:var(--gold)}
+    .step span{font-size:12px;color:var(--text-dim);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+
+    .notice{margin-top:10px;padding:12px 14px;border-radius:10px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.18);color:var(--gold-bright);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo"><span class="seal"></span><b>LUXE<em>MART</em></b></div>
+      <div class="pill"><i class="fa-solid fa-lock" style="margin-right:8px"></i> Secured Checkout (demo)</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="head">
+          <h2 id="leftTitle">Checkout Details</h2>
+          <a href="test.html" style="color:var(--text-dim);font-weight:800;text-decoration:none"><i class="fa-solid fa-arrow-left" style="margin-right:8px"></i>Back to shop</a>
+        </div>
+
+        <div class="body" id="checkoutBody">
+          <div class="sectionFlow show" id="stepCart">
+            <div class="muted" style="margin-bottom:14px">
+              Complete your purchase. This demo simulates “Buy → processing → completed”.
+            </div>
+
+            <div class="form" aria-label="Delivery details">
+              <div class="field">
+                <label for="fullName">Full name</label>
+                <input id="fullName" required placeholder="John Doe" />
+              </div>
+              <div class="field">
+                <label for="address">Address</label>
+                <input id="address" required placeholder="123 Luxury Street" />
+              </div>
+              <div class="field">
+                <label for="city">City</label>
+                <input id="city" required placeholder="London" />
+              </div>
+              <div class="field">
+                <label for="country">Country</label>
+                <select id="country" required>
+                  <option value="UK">United Kingdom</option>
+                  <option value="PK">Pakistan</option>
+                  <option value="UAE">United Arab Emirates</option>
+                  <option value="US">United States</option>
+                  <option value="IN">India</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="payment">Payment method</label>
+                <select id="payment" required>
+                  <option value="card">Card (Visa/Mastercard)</option>
+                  <option value="paypal">PayPal</option>
+                  <option value="cod">Cash on Delivery (demo)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="placeOrderBtn" type="button"><i class="fa-solid fa-bolt" style="margin-right:10px"></i>Place Order</button>
+              <button class="btn btn-ghost" type="button" id="clearCartBtn"><i class="fa-solid fa-trash" style="margin-right:10px"></i>Clear cart</button>
+            </div>
+
+            <div class="notice" id="authNotice" style="display:none"></div>
+          </div>
+
+          <div class="sectionFlow" id="stepProcessing">
+            <div class="center">
+              <div class="bigStatus"><i class="fa-solid fa-gear"></i><b>Processing your order</b></div>
+              <div class="muted">Securing payment & confirming stock…</div>
+              <div class="kpi" id="procTimer">0s</div>
+              <div style="width:min(520px,100%);margin-top:10px">
+                <div class="bar"><div id="procBar"></div></div>
+                <div class="muted" style="margin-top:10px" id="procMsg">Starting…</div>
+              </div>
+              <div class="step" aria-hidden="true">
+                <span><div class="dot done"></div></span>
+                <span><div class="dot"></div></span>
+                <span><div class="dot"></div></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sectionFlow" id="stepCompleted">
+            <div class="center">
+              <div class="bigStatus"><i class="fa-solid fa-circle-check"></i><b>Order Completed</b></div>
+              <div class="muted">Thank you! Your luxury delivery is confirmed.</div>
+              <div class="kpi" style="margin-top:10px"><span class="orderId" id="orderId">LX-00000</span></div>
+
+              <table style="margin-top:16px">
+                <thead>
+                  <tr><th>Summary</th><th></th></tr>
+                </thead>
+                <tbody id="summaryRows"></tbody>
+              </table>
+
+              <div class="actions" style="margin-top:18px">
+                <a class="btn btn-primary" id="backToHome" href="test.html" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none"><i class="fa-solid fa-house" style="margin-right:10px"></i>Back to Home</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head">
+          <h2>Cart Summary</h2>
+          <span class="muted" id="cartCountPill">0 items</span>
+        </div>
+        <div class="body">
+          <div id="cartEmpty" class="muted" style="display:none">
+            Your cart is empty. Go back and add some products.
+          </div>
+
+          <table id="itemsTable">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+
+          <div style="margin-top:14px">
+            <div class="muted" style="display:flex;justify-content:space-between;gap:12px">
+              <span>Subtotal</span><span id="subTotal">$0.00</span>
+            </div>
+            <div class="muted" style="display:flex;justify-content:space-between;gap:12px;margin-top:8px">
+              <span>Shipping</span><span id="shipCost" style="color:var(--gold-bright);font-weight:900">Free</span>
+            </div>
+            <div style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;display:flex;justify-content:space-between;gap:12px">
+              <b>Total</b><b id="grandTotal">$0.00</b>
+            </div>
+          </div>
+
+          <div class="notice" style="margin-top:14px">
+            Tip: Cart total over $150 gets free shipping.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const PRODUCT_URL_DATA = (()=>{
+      // Minimal product lookup. We rely on cart ids and re-create price based on test.html data.
+      // Since test.html already stores cart with only {id,qty}, we re-use a small mapping.
+      // Keep this in sync with test.html PRODUCTS.
+      return {
+        1:1240,2:318,3:640,4:279,5:520,6:1399,7:165,8:145,9:189,10:410,11:298,12:145,13:480,14:899,15:185,16:220
+      };
+    })();
+
+    const CART_KEY='lx-cart';
+    const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+
+    const byId = (id)=>document.getElementById(id);
+
+    function currencySymbol(){
+      // test.html stores currency only in memory; checkout just uses USD for demo.
+      return '$';
+    }
+
+    const itemsBody = byId('itemsBody');
+    const cartEmpty = byId('cartEmpty');
+    const cartCountPill = byId('cartCountPill');
+
+    const subTotalEl = byId('subTotal');
+    const grandTotalEl = byId('grandTotal');
+    const shipCostEl = byId('shipCost');
+
+    function money(n){ return currencySymbol()+n.toFixed(2); }
+
+    function productNameFromId(id){
+      const N={
+        1:'Heirloom Automatic Chronograph',
+        2:'Atelier Leather Runner',
+        3:'Noir Cashmere Overcoat',
+        4:'Studio Pro Wireless Headphones',
+        5:'Signature Silk Evening Gown',
+        6:'Featherlight Ultrabook 14"',
+        7:'Oversized Acetate Sunglasses',
+        8:"Eau de Parfum — Bois d'Or",
+        9:'Pro Gaming Mechanical Keyboard',
+        10:'Full-Grain Leather Weekender',
+        11:'Minimalist Titanium Watch',
+        12:'Performance Knit Trainers',
+        13:'Structured Tote in Pebbled Leather',
+        14:'Slim OLED Smartphone 6.7"',
+        15:'Heritage Linen Shirt',
+        16:'Velvet Evening Clutch'
+      };
+      return N[id] || ('Product #'+id);
+    }
+
+    function renderCartSummary(){
+      const itemsCount = cart.reduce((s,x)=>s+x.qty,0);
+      cartCountPill.textContent = itemsCount+' items';
+
+      if(!cart.length){
+        cartEmpty.style.display='block';
+        byId('itemsTable').style.display='none';
+        return;
+      }
+
+      itemsBody.innerHTML = cart.map(line=>{
+        const id=line.id;
+        const qty=line.qty;
+        const price=PRODUCT_URL_DATA[id] ?? 0;
+        const total=price*qty;
+        return `<tr><td>${productNameFromId(id)} <span style="color:rgba(255,255,255,0.6)">×${qty}</span></td><td>${money(total)}</td></tr>`;
+      }).join('');
+
+      const subtotal = cart.reduce((s,line)=>{
+        const price=PRODUCT_URL_DATA[line.id] ?? 0;
+        return s + price*line.qty;
+      },0);
+      const shippingFree = subtotal>150;
+      const shipping = shippingFree ? 0 : 14.90;
+      subTotalEl.textContent = money(subtotal);
+      shipCostEl.textContent = shippingFree ? 'Free' : money(shipping);
+      grandTotalEl.textContent = money(subtotal + shipping);
+    }
+
+    renderCartSummary();
+
+    // flow states
+    const stepCart = byId('stepCart');
+    const stepProcessing = byId('stepProcessing');
+    const stepCompleted = byId('stepCompleted');
+
+    function setStep(which){
+      [stepCart, stepProcessing, stepCompleted].forEach(el=>el.classList.remove('show'));
+      which.classList.add('show');
+    }
+
+    const placeOrderBtn = byId('placeOrderBtn');
+    const clearCartBtn = byId('clearCartBtn');
+
+    clearCartBtn.addEventListener('click',()=>{
+      localStorage.removeItem(CART_KEY);
+      window.location.reload();
+    });
+
+    // Require login (optional)
+    const user = JSON.parse(localStorage.getItem('lx-user')||'null');
+    const authNotice = byId('authNotice');
+    if(cart.length && !user){
+      authNotice.style.display='block';
+      authNotice.textContent = 'Sign in recommended for fastest checkout. You can still place order in this demo.';
+    }
+
+    function generateOrderId(){
+      const n = Math.floor(10000 + Math.random()*90000);
+      return 'LX-'+n;
+    }
+
+    function renderCompleted(order){
+      const summaryRows = byId('summaryRows');
+      const symbol = currencySymbol();
+
+      const subtotal = cart.reduce((s,line)=>{
+        const price=PRODUCT_URL_DATA[line.id] ?? 0;
+        return s + price*line.qty;
+      },0);
+      const shippingFree = subtotal>150;
+      const shipping = shippingFree ? 0 : 14.90;
+      const total = subtotal + shipping;
+
+      byId('orderId').textContent = order;
+
+      summaryRows.innerHTML = [
+        `<tr><td>Subtotal</td><td style="text-align:right;font-weight:900">${symbol+subtotal.toFixed(2)}</td></tr>`,
+        `<tr><td>Shipping</td><td style="text-align:right;font-weight:900">${shippingFree ? 'Free' : symbol+shipping.toFixed(2)}</td></tr>`,
+        `<tr><td>Total</td><td style="text-align:right;font-weight:900;color:var(--gold-bright)">${symbol+total.toFixed(2)}</td></tr>`
+      ].join('');
+    }
+
+    function startProcessing(){
+      setStep(stepProcessing);
+      const procTimer = byId('procTimer');
+      const procBar = byId('procBar');
+      const procMsg = byId('procMsg');
+
+      const secondsToFinish = 4;
+      const started = Date.now();
+
+      function tick(){
+        const elapsed = (Date.now()-started)/1000;
+        const left = Math.max(0, secondsToFinish - elapsed);
+        procTimer.textContent = Math.ceil(left)+'s';
+        const pct = Math.min(100, (elapsed/secondsToFinish)*100);
+        procBar.style.width = pct+'%';
+        procMsg.textContent = elapsed<1.2 ? 'Securing payment…' : elapsed<2.8 ? 'Confirming stock…' : elapsed<3.6 ? 'Preparing your shipment…' : 'Finalizing order…';
+        if(elapsed>=secondsToFinish){
+          clearInterval(t);
+          finish();
+        }
+      }
+
+      procBar.style.width = '0%';
+      tick();
+      const t = setInterval(tick, 200);
+    }
+
+    function finish(){
+      // update order in localStorage for demo
+      const orderId = generateOrderId();
+      renderCompleted(orderId);
+
+      // clear cart
+      localStorage.removeItem(CART_KEY);
+
+      setStep(stepCompleted);
+      // push a notification count in test.html (optional)
+      showSoftToast('Order placed successfully');
+    }
+
+    function showSoftToast(text){
+      // minimal toast using alert fallback
+      try{
+        const el = document.createElement('div');
+        el.textContent = text;
+        el.style.position='fixed';
+        el.style.bottom='22px';
+        el.style.left='50%';
+        el.style.transform='translateX(-50%)';
+        el.style.background='rgba(17,17,20,0.95)';
+        el.style.border='1px solid rgba(201,168,76,0.2)';
+        el.style.color='#e4c76b';
+        el.style.padding='12px 16px';
+        el.style.borderRadius='12px';
+        el.style.boxShadow='0 24px 70px -18px rgba(0,0,0,0.7)';
+        el.style.zIndex='99999';
+        el.style.fontWeight='900';
+        document.body.appendChild(el);
+        setTimeout(()=>{ el.remove(); }, 1800);
+      }catch{}
+    }
+
+    placeOrderBtn.addEventListener('click',()=>{
+      if(!cart.length){
+        alert('Cart is empty.');
+        return;
+      }
+
+      // validate fields (demo)
+      const requiredIds=['fullName','address','city','country','payment'];
+      for(const id of requiredIds){
+        const v = byId(id).value;
+        if(!v){ alert('Please fill checkout form.'); return; }
+      }
+
+      startProcessing();
+    });
+
+    // If cart empty - disable place order button
+    if(!cart.length){
+      placeOrderBtn.disabled = true;
+      placeOrderBtn.style.opacity = '0.6';
+    }
+  </script>
+</body>
+</html>
+

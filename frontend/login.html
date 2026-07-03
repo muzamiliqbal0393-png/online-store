@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — LUXEMART</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root{--black:#07070a;--charcoal:#111114;--off-white:#f5f2eb;--gold:#c9a84c;--gold-bright:#e4c76b;--text-dim:#a09b90;--line:rgba(201,168,76,0.2);--surface:rgba(17,17,20,0.85);--border:rgba(255,255,255,0.07);--radius:14px;--ff:system-ui,-apple-system,Segoe UI,Roboto,Arial;--shadow:0 24px 70px -18px rgba(0,0,0,0.7);--trans:.35s cubic-bezier(.2,.8,.2,1)}
+    body{margin:0;font-family:var(--ff);background:var(--black);color:var(--off-white);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:26px;}
+    .card{width:min(520px,100%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .head{padding:24px 24px 18px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;justify-content:space-between;}
+    .logo{display:flex;gap:10px;align-items:center;}
+    .seal{width:10px;height:10px;background:var(--gold);border-radius:50%;box-shadow:0 0 18px rgba(201,168,76,.8);}
+    .logo b{font-size:20px;letter-spacing:.03em;font-weight:600}
+    .logo em{color:var(--gold);font-style:italic;font-weight:400}
+    .body{padding:22px 24px 24px;}
+    h1{margin:0 0 6px;font-size:22px;font-weight:700}
+    p{margin:0 0 18px;color:var(--text-dim);line-height:1.6;font-size:14px}
+    form{display:grid;gap:12px}
+    label{font-size:13px;color:var(--text-dim);letter-spacing:.02em}
+    input{width:100%;padding:13px 14px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--off-white);outline:none;transition:border-color var(--trans),background var(--trans)}
+    input:focus{border-color:rgba(201,168,76,0.6);background:rgba(255,255,255,0.06)}
+    .row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .btn{padding:12px 16px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:transform var(--trans),background var(--trans),border-color var(--trans);font-weight:700;letter-spacing:.02em}
+    .btn-primary{background:var(--gold);color:#0a0805;border-color:var(--gold)}
+    .btn-primary:hover{background:var(--gold-bright);transform:translateY(-2px)}
+    .btn-ghost{background:transparent;color:var(--off-white);border-color:var(--border)}
+    .btn-ghost:hover{border-color:rgba(201,168,76,0.6);transform:translateY(-2px)}
+    .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:14px}
+    .links a{color:var(--gold-bright);text-decoration:none}
+    .msg{margin-top:12px;min-height:18px;color:var(--gold-bright);font-size:13px}
+    .footer{padding:14px 24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--text-dim)}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-label="Sign in">
+    <div class="head">
+      <div class="logo"><span class="seal"></span><b>LUXE<em>MART</em></b></div>
+      <a href="test.html" style="color:var(--text-dim);text-decoration:none;font-weight:600"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+    <div class="body">
+      <h1>Sign In</h1>
+      <p>Access your cart, wishlist, and order tracking.</p>
+
+      <form id="loginForm" novalidate>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required placeholder="••••••••" />
+        </div>
+
+        <div class="row">
+          <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
+            <input id="remember" type="checkbox" style="width:16px;height:16px" /> Remember me
+          </label>
+          <button class="btn btn-ghost" type="button" id="forgotBtn" title="Demo only" aria-label="Forgot password">Forgot?</button>
+        </div>
+
+        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-right-to-bracket" style="margin-right:10px"></i>Sign In</button>
+        <div class="msg" id="msg" aria-live="polite"></div>
+
+        <div class="links">
+          <span>New here?</span>
+          <a href="signup.html">Create account</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="footer">
+      <span><i class="fa-solid fa-shield-halved"></i> Secure demo authentication</span>
+      <span>Made for your LUXEMART UI</span>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id)=>document.getElementById(id);
+    const msgEl = $('msg');
+    function showMsg(t,isErr=false){
+      msgEl.style.color = isErr ? '#ff6b6b' : 'var(--gold-bright)';
+      msgEl.textContent = t;
+    }
+
+    // Demo: users stored in localStorage under lx-users (array)
+    // signup.html writes to this key.
+    function getUsers(){
+      try{ return JSON.parse(localStorage.getItem('lx-users') || '[]'); }
+      catch{ return []; }
+    }
+
+    function setUserSession(user, remember){
+      localStorage.setItem('lx-user', JSON.stringify({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: user.createdAt
+      }));
+      if(!remember){
+        // keep it for this demo session only via a flag
+        sessionStorage.setItem('lx-session', '1');
+      }
+    }
+
+    $('forgotBtn').addEventListener('click',()=>{
+      showMsg('Demo only: use any password that matches signup.' , true);
+    });
+
+    $('loginForm').addEventListener('submit',(e)=>{
+      e.preventDefault();
+      showMsg('');
+      const email = $('email').value.trim().toLowerCase();
+      const password = $('password').value;
+      if(!email || !password){ showMsg('Please enter email and password.', true); return; }
+
+      const users = getUsers();
+      const u = users.find(x => x.email.toLowerCase()===email);
+      if(!u){ showMsg('No account found for this email.', true); return; }
+      if(u.password !== password){ showMsg('Incorrect password.', true); return; }
+
+      const remember = $('remember').checked;
+      setUserSession(u, remember);
+      showMsg('Signed in successfully. Redirecting…');
+      setTimeout(()=>{
+        window.location.href='test.html';
+      }, 700);
+    });
+
+    // If already signed in
+    (function(){
+      const user = localStorage.getItem('lx-user');
+      if(user){
+        // small delay for UX
+        setTimeout(()=>window.location.href='test.html', 400);
+      }
+    })();
+  </script>
+</body>
+</html>
+
